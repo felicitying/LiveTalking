@@ -78,7 +78,7 @@ class BaseASR:
             audio_frame=self.get_audio_frame()
             self.frames.append(audio_frame.data)
             self.output_queue.put(audio_frame)
-        for _ in range(self.stride_left_size):
+        for _ in range(self.stride_left_size + self.stride_right_size):
             self.output_queue.get()
 
     def run_step(self):

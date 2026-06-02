@@ -83,7 +83,9 @@ class PlayerStreamTrack(MediaStreamTrack):
                 #     self.timelist.pop(0)
                 # self.timelist.append(time.time())
             else:
-                self._start = time.time()
+                if self._player._start_time is None:
+                    self._player._start_time = time.time()
+                self._start = self._player._start_time
                 self._timestamp = 0
                 self.timelist.append(self._start)
                 mylogger.info('video start:%f',self._start)
@@ -102,7 +104,9 @@ class PlayerStreamTrack(MediaStreamTrack):
                 #     self.timelist.pop(0)
                 # self.timelist.append(time.time())
             else:
-                self._start = time.time()
+                if self._player._start_time is None:
+                    self._player._start_time = time.time()
+                self._start = self._player._start_time
                 self._timestamp = 0
                 self.timelist.append(self._start)
                 mylogger.info('audio start:%f',self._start)
@@ -186,6 +190,8 @@ class HumanPlayer:
         self.__container = avatar_session
         if hasattr(self.__container, 'output'):
             self.__container.output._player = self
+
+        self._start_time = None  # shared clock for audio/video sync
 
     def push_video(self, frame):
         from av import VideoFrame
